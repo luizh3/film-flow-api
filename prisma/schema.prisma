@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  userId String @id @default(uuid()) @map("user_id")
+  name String 
+  email String @unique
+  password String
+  createdAt DateTime? @default(now()) @map("create_at")
+  avatarUrl String? @default("") @map("avatar_url")
+  reviews Review[]
+  likeReviews LikeReview[]
+
+  @@map("users")
+}
+
+model Review {
+  reviewId String @id @default(uuid()) @map("review_id")
+  title String
+  createAt DateTime? @default(now()) @map("create_at")
+  updateAt DateTime? @default(now()) @map("update_at")
+  description String
+  author User @relation(fields: [authorId], references: [userId])
+  authorId String @map("author_id")
+  likeReviews LikeReview[]
+  score Int
+  movieId String // Mudar para int
+
+  @@unique([movieId, authorId])
+  @@map("reviews")
+}
+
+model LikeReview {
+  user User @relation(fields: [userId], references: [userId])
+  review Review @relation(fields: [reviewId], references: [reviewId])
+  userId String @map("user_id")
+  reviewId String @map("review_id")
+
+  @@id([userId, reviewId])
+  @@map("like_reviews")
+}
+
+model Notification {
+  notificationId String @id @default(uuid()) @map("notification_id")
+  payload Json
+  status Int
+  createAt DateTime? @default(now()) @map("create_at")
+  attempts Int 
+  type String
+
+  @@map("notifications")
+}
