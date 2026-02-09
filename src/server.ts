@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import cors from '@fastify/cors'
+import websocket from "@fastify/websocket";
 
 import { routes } from "@/routes";
 import { ExceptionHandlingController } from "./exceptions/ExceptionHandlerController";
@@ -10,21 +11,27 @@ import logerConfig from "./config/logger/LoggerConfig";
 import cacheConfig from "./config/cache/CacheConfig";
 import { cache } from "./config/cache/Cache";
 import cacheMiddleware from "./config/cache/CacheMiddleware";
+import websocketConfig from "./config/websocket/WebsocketConfig";
+import { websocketsRoutes } from "./websocketsRoutes";
 
 const fastify = Fastify({
-    logger: true
+  logger: true
 });
 
 cacheConfig();
-logerConfig( fastify );
-swaggerConfig( fastify );
-authenticationMiddleware( fastify );
-cacheMiddleware( fastify );
+logerConfig(fastify);
+swaggerConfig(fastify);
+authenticationMiddleware(fastify);
+cacheMiddleware(fastify);
+websocketConfig(fastify);
 
-fastify.register( cors );
-fastify.register( routes, { prefix : "/api" } );
+fastify.register(cors);
+fastify.register(websocket);
 
-fastify.setErrorHandler( new ExceptionHandlingController().handle );
+fastify.register(websocketsRoutes);
+fastify.register(routes, { prefix: "/api" });
+
+fastify.setErrorHandler(new ExceptionHandlingController().handle);
 
 const start = async () => {
 
@@ -35,10 +42,10 @@ const start = async () => {
     await cache.start();
     await fastify.listen({ port: 3333 })
 
-  } catch( error ) {
+  } catch (error) {
 
-    console.error( error )
-    process.exit( 1 )
+    console.error(error)
+    process.exit(1)
 
   }
 
