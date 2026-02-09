@@ -1,19 +1,20 @@
+import { User } from "@prisma/client";
 import { UserType } from "@/types/customer/UserType"
-import { UserRequestType } from "@/types/customer/UserRequestType"
-import { UserResponseType } from "@/types/customer/UserResponseType"
+import { UserRequest } from "@/types/customer/UserRequest"
+import { UserResponse } from "@/types/customer/UserResponse"
 
 export class CustomerMapper {
 
-    static toResponse( model : UserType ) : UserResponseType {
+    static toResponse( model : User ) : UserResponse {
         return {
+            id: model.userId,
             email: model.email,
             name: model.name,
-            id: model.userId,
             avatarUrl: model.avatarUrl
         }
     }
 
-    static toModel( request : UserRequestType ) : UserType {
+    static toModel( request : UserRequest ) : UserType {
         return {
             name: request.name,
             email: request.email,

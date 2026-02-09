@@ -1,11 +1,11 @@
-import { MultiSearchFilterType } from "@/types/api/MultiSearchFilterType";
-import { SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
+import { MultiSearchFilter } from "@/types/api/MultiSearchFilter";
+import { SearchMoviesResult } from "@/types/api/SearchMoviesResult";
 import { TVProviderService } from "../TVProviderService";
 import { TMDBTVEndpoint } from "@/api/tmdb/TMDBTVEndpoint";
 
 export class TMDBTVProviderService extends TVProviderService {
 
-    async findByFilters( filters: MultiSearchFilterType ): Promise<SearchMoviesResultType> {
+    async findByFilters( filters: MultiSearchFilter ): Promise<SearchMoviesResult> {
         return await new TMDBTVEndpoint().findByFilters( filters );
     }
 

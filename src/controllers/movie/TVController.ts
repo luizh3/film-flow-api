@@ -1,6 +1,6 @@
-import { MultiSearchFilterType } from "@/types/api/MultiSearchFilterType";
+import { MultiSearchFilter } from "@/types/api/MultiSearchFilter";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
+import { SearchMoviesResult } from "@/types/api/SearchMoviesResult";
 import { StatusCodes } from "@/enum/StatusCode";
 import { TVServiceFactory } from "@/services/movie/factory/TVServiceFactory";
 
@@ -10,11 +10,11 @@ export class TVController {
 
     public findByFilters = async( request : FastifyRequest, reply: FastifyReply ) => {
 
-        const filters = request.query as MultiSearchFilterType;
+        const filters = request.query as MultiSearchFilter;
 
         const tvService = TVServiceFactory.create( ApiConfig.getTpProvider() );
 
-        const response : SearchMoviesResultType = await tvService.findByFilters( filters );
+        const response : SearchMoviesResult = await tvService.findByFilters( filters );
 
         reply.status( StatusCodes.OK ).send( response )
 

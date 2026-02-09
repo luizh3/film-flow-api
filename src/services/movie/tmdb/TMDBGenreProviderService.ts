@@ -1,12 +1,12 @@
 import { TMDBGenreEndpoint } from "@/api/tmdb/TMDBGenreEndpoint";
 import { GenreProviderService } from "../GenreProviderService";
-import { GenresResultType } from "@/types/api/genre/GenresResultType";
-import { MultiGenreType } from "@/types/api/multi/MultiGenreType";
+import { GenresResult } from "@/types/api/genre/GenresResult";
+import { MultiGenre } from "@/types/api/multi/MultiGenre";
 
 
 export class TMDBGenreProviderService extends GenreProviderService {
     
-    async find(): Promise<MultiGenreType> {
+    async find(): Promise<MultiGenre> {
         
         const endpoint = new TMDBGenreEndpoint()
 
@@ -15,7 +15,7 @@ export class TMDBGenreProviderService extends GenreProviderService {
             endpoint.findTVList() 
         ]);
 
-        const multiGenres : MultiGenreType = {
+        const multiGenres : MultiGenre = {
             movie: moviesGenres,
             tv: tvGenres
         }

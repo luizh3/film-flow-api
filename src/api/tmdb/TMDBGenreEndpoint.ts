@@ -1,10 +1,10 @@
 import { TMDBEndpoint } from "./TMDBEndpoint";
 import { QueryType } from "@/utils/FetchWrapper";
-import { GenresResultType } from "@/types/api/genre/GenresResultType";
+import { GenresResult } from "@/types/api/genre/GenresResult";
 
 export class TMDBGenreEndpoint extends TMDBEndpoint {
 
-    async findMovieList() : Promise<GenresResultType> {
+    async findMovieList() : Promise<GenresResult> {
 
         const filters : QueryType = {
             language: "en-US"
@@ -14,7 +14,7 @@ export class TMDBGenreEndpoint extends TMDBEndpoint {
 
         const response = await this.httpClient.get( endpointURL );
 
-        const genres = await response.json() as GenresResultType;
+        const genres = await response.json() as GenresResult;
 
         return genres;
 
@@ -30,7 +30,7 @@ export class TMDBGenreEndpoint extends TMDBEndpoint {
 
         const response = await this.httpClient.get( endpointURL );
 
-        const genres = await response.json() as GenresResultType;
+        const genres = await response.json() as GenresResult;
 
         return genres;
         

@@ -1,6 +1,6 @@
-import { MultiSearchFilterType } from "@/types/api/MultiSearchFilterType";
-import { SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
+import { MultiSearchFilter } from "@/types/api/MultiSearchFilter";
+import { SearchMoviesResult } from "@/types/api/SearchMoviesResult";
 
 export abstract class MovieProviderService {
-    abstract findByFilters( filters : MultiSearchFilterType ) : Promise<SearchMoviesResultType> 
+    abstract findByFilters( filters : MultiSearchFilter ) : Promise<SearchMoviesResult> 
 }

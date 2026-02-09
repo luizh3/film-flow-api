@@ -4,9 +4,9 @@ import { SectionTypeEnum } from "@/enum/SectionTypeEnum";
 import { ShowTypeEnum } from "@/enum/ShowTypeEnum";
 import { StatusCodes } from "@/enum/StatusCode";
 import { GenreServiceFactory } from "@/services/movie/factory/GenreServiceFactory";
-import { ConfigType } from "@/types/api/config/ConfigType";
-import { SectionType } from "@/types/api/config/SectionType";
-import { MultiGenreType } from "@/types/api/multi/MultiGenreType";
+import { Config } from "@/types/api/config/Config";
+import { Section } from "@/types/api/config/Section";
+import { MultiGenre } from "@/types/api/multi/MultiGenre";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export class ConfigController {
@@ -17,9 +17,9 @@ export class ConfigController {
 
         const genreService = GenreServiceFactory.create( this.tpProvider );
 
-        const multiGenre : MultiGenreType = await genreService.find();
+        const multiGenre : MultiGenre = await genreService.find();
 
-        const config : ConfigType = {
+        const config : Config = {
             ...multiGenre,
             sections: this.sections()
         }
@@ -27,9 +27,9 @@ export class ConfigController {
         reply.status( StatusCodes.OK ).send( config );
     }
 
-    public sections = () : SectionType[] => {
+    public sections = () : Section[] => {
 
-        const sections : SectionType[] = [
+        const sections : Section[] = [
             {
                 key: SectionTypeEnum.TOP_RATED as string,
                 name: "Top rated",

@@ -1,12 +1,12 @@
-import { SectionFiltersType } from "@/types/api/section/SectionFiltersType";
+import { SectionFilters } from "@/types/api/section/SectionFilters";
 import { SectionService } from "../SectionService";
-import { SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
+import { SearchMoviesResult } from "@/types/api/SearchMoviesResult";
 import { SectionTypeEnum } from "@/enum/SectionTypeEnum";
 import { TMDBSectionEndpoint } from "@/api/tmdb/TMDBSectionEndpoint";
 
 export class TMDBSectionService extends SectionService {
 
-    async findBySection( sectionFilters : SectionFiltersType ) : Promise<SearchMoviesResultType> {
+    async findBySection( sectionFilters : SectionFilters ) : Promise<SearchMoviesResult> {
 
         const endpoint = new TMDBSectionEndpoint();
 

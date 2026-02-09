@@ -6,14 +6,20 @@ import multiRoutes from "./routes/MultiRoutes";
 import movieRoutes from "./routes/MovieRoutes";
 import tvRoutes from "./routes/TVRoutes";
 import sectionRoutes from "./routes/SectionRoute";
+import authRoutes from "./routes/AuthRoutes";
+import reviewRoutes from "./routes/ReviewRoutes";
+import notificationRoutes from "./routes/NotificationRoutes";
 
-export async function routes( fastify: FastifyInstance, options: FastifyPluginOptions ) {
+export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
 
-    fastify.register( userRoutes, { prefix: "/user"} );
-    fastify.register( multiRoutes, { prefix: "/multi"} );
-    fastify.register( configRoutes, { prefix: "/config"} );
-    fastify.register( movieRoutes, { prefix: "/movie"} );
-    fastify.register( tvRoutes, { prefix: "/tv" } );
-    fastify.register( sectionRoutes, { prefix: "/section" } );
+    fastify.register(userRoutes, { prefix: "/user" });
+    fastify.register(multiRoutes, { prefix: "/multi" });
+    fastify.register(configRoutes, { prefix: "/config" });
+    fastify.register(movieRoutes, { prefix: "/movie" });
+    fastify.register(tvRoutes, { prefix: "/tv" });
+    fastify.register(sectionRoutes, { prefix: "/section" });
+    fastify.register(authRoutes, { prefix: "/auth" });
+    fastify.register(reviewRoutes, { prefix: "/review" });
+    fastify.register(notificationRoutes, { prefix: "/notification" });
 
 }

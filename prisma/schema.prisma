@@ -10,42 +10,45 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  userId String @id @default(uuid()) @map("user_id")
-  name String 
-  email String @unique
-  password String
-  createdAt DateTime? @default(now()) @map("create_at")
-  avatarUrl String? @default("") @map("avatar_url")
-  reviews Review[]
-  likeReviews LikeReview[]
+  userId        String         @id @default(uuid()) @map("user_id")
+  name          String
+  email         String         @unique
+  password      String
+  createdAt     DateTime?      @default(now()) @map("create_at")
+  avatarUrl     String?        @default("") @map("avatar_url")
+  reviews       Review[]
+  likeReviews   LikeReview[]
+  notifications Notification[]
 
   @@map("users")
 }
 
 model Review {
-  reviewId String @id @default(uuid()) @map("review_id")
-  title String
-  createAt DateTime? @default(now()) @map("create_at")
-  updateAt DateTime? @default(now()) @map("update_at")
-  description String
-  author User @relation(fields: [authorId], references: [userId])
-  authorId String @map("author_id")
-  likeReviews LikeReview[]
-  score Int
-  movieId String // Mudar para int
+  reviewId     String       @id @default(uuid()) @map("review_id")
+  title        String
+  createAt     DateTime?    @default(now()) @map("create_at")
+  updateAt     DateTime?    @default(now()) @map("update_at")
+  description  String
+  author       User         @relation(fields: [authorId], references: [userId])
+  authorId     String       @map("author_id")
+  likeReviews  LikeReview[]
+  score        Decimal      @db.Decimal(3, 1)
+  movieId      String // Mudar para int
+  programType  String       @default("") @map("program_type")
+  programTitle String       @default("") @map("program_title")
 
   @@unique([movieId, authorId])
   @@map("reviews")
 }
 
 model LikeReview {
-  user User @relation(fields: [userId], references: [userId])
-  review Review @relation(fields: [reviewId], references: [reviewId])
-  userId String @map("user_id")
+  user     User   @relation(fields: [userId], references: [userId])
+  review   Review @relation(fields: [reviewId], references: [reviewId])
+  userId   String @map("user_id")
   reviewId String @map("review_id")
 
   @@id([userId, reviewId])
@@ -54,11 +57,15 @@ model LikeReview {
 
 model Notification {
   notificationId String @id @default(uuid()) @map("notification_id")
-  payload Json
-  status Int
-  createAt DateTime? @default(now()) @map("create_at")
-  attempts Int 
-  type String
 
+  recipient   User   @relation(fields: [recipientId], references: [userId])
+  recipientId String @map("recipient_id")
+
+  type     String
+  payload  Json
+  status   Int
+  createAt DateTime? @default(now()) @map("create_at")
+
+  @@index([recipientId, status])
   @@map("notifications")
 }

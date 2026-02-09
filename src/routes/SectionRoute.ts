@@ -1,25 +1,25 @@
 import { SectionController } from "@/controllers/movie/SectionController";
 import { StatusCodes } from "@/enum/StatusCode";
-import { SearchMoviesResult, SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
-import { SectionFilters, SectionFiltersType } from "@/types/api/section/SectionFiltersType";
-import { ErrorResponse } from "@/types/error/ErrorResponseType";
+import { SearchMoviesResultSchema, SearchMoviesResult } from "@/types/api/SearchMoviesResult";
+import { SectionFiltersSchema, SectionFilters } from "@/types/api/section/SectionFilters";
+import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
 import { FastifyInstance } from "fastify";
 
-export default async function sectionRoutes( fastify : FastifyInstance ) {
+export default async function sectionRoutes(fastify: FastifyInstance) {
 
-    fastify.get<{Querystring: SectionFiltersType, Reply: SearchMoviesResultType}>(
+    fastify.get<{ Querystring: SectionFilters, Reply: SearchMoviesResult }>(
         "/",
         {
             preHandler: [fastify.authenticate, fastify.cache],
             schema: {
-                querystring: SectionFilters,
+                querystring: SectionFiltersSchema,
                 response: {
-                    [StatusCodes.OK]: SearchMoviesResult,
-                    [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponse
+                    [StatusCodes.OK]: SearchMoviesResultSchema,
+                    [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 }
             }
         },
         new SectionController().findBySection
-    ) 
+    )
 
 }

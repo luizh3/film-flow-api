@@ -1,58 +1,69 @@
+import { User } from "@prisma/client";
 import { UserType } from "@/types/customer/UserType";
 import { UserRepository } from "@/repositorys/costumer/UserRepository"
 import { NotFoundException } from "@/exceptions/NotFoundException";
 import { InternalErrorException } from "@/exceptions/InternalErrorException";
-import { LoginRequestType } from "@/types/login/LoginRequestType";
+import { LoginRequest } from "@/types/login/LoginRequest";
 
 import bcrypt from 'bcrypt'
 
 export class UserService {
 
-    async insert( newUser : UserType ) : Promise<UserType> {
+    async insert(newUser: UserType): Promise<User> {
 
-        const SALT_ROUNDS : number = 10
+        const SALT_ROUNDS: number = 10
 
         const repository = new UserRepository()
 
-        const userRegister = await repository.findOneByEmail( newUser.email );
+        const userRegister = await repository.findOneByEmail(newUser.email);
 
-        if( userRegister ) {
+        if (userRegister) {
             throw new InternalErrorException("E-mail already registered!");
         }
 
-        newUser.password = await bcrypt.hash( newUser.password , SALT_ROUNDS)
+        newUser.password = await bcrypt.hash(newUser.password, SALT_ROUNDS)
 
-        return await repository.insert( newUser )
+        return await repository.insert(newUser)
     }
 
-    async update( user : Partial<UserType> ) : Promise<UserType> {
-        return await new UserRepository().update( user );
+    async update(user: Partial<UserType>): Promise<User> {
+        return await new UserRepository().update(user);
     }
 
-    async findOne( userId: string ) : Promise<UserType> {
+    async findOne(userId: string): Promise<User> {
 
         const repository = new UserRepository();
-        const user = await repository.findOne( userId );
+        const user = await repository.findOne(userId);
 
-        if( !user ) {
+        if (!user) {
             throw new NotFoundException("User not found!");
         }
 
         return user;
     }
 
-    async login( loginRequest: LoginRequestType ) : Promise<UserType> {
+    async login(loginRequest: LoginRequest): Promise<User> {
 
         const repository = new UserRepository();
 
-        const userRegister = await repository.findOneByEmail( loginRequest.email );
+        const userRegister = await repository.findOneByEmail(loginRequest.email);
 
-        const isValidUser = userRegister && await bcrypt.compare( loginRequest.password, userRegister.password );
+        const isValidUser = userRegister && await bcrypt.compare(loginRequest.password, userRegister.password);
 
-        if( !isValidUser ) {
+        if (!isValidUser) {
             throw new InternalErrorException("Invalid email or password!");
         }
 
         return userRegister;
+    }
+
+    async findManyByIds(userIds: string[]): Promise<User[]> {
+
+        const repository = new UserRepository();
+
+        const users = repository.findManyByIds(userIds);
+
+        return users;
+
     }
 }

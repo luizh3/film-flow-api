@@ -1,12 +1,13 @@
-import { SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
+import { SearchMoviesResult } from "@/types/api/SearchMoviesResult";
 import { TMDBEndpoint } from "./TMDBEndpoint";
-import { MultiSearchFilterType } from "@/types/api/MultiSearchFilterType";
+import { MultiSearchFilter } from "@/types/api/MultiSearchFilter";
 import { QueryType } from "@/utils/FetchWrapper";
 import { TMDBSearchMoviesMapper } from "@/mappers/api/tmdb/TMDBSearchMoviesMapper";
+import { TMDBSearchMoviesResponse } from "@/types/api/response/tmdb/TMDBSearchMoviesResponse";
 
 export class TMDBTVEndpoint extends TMDBEndpoint {
 
-    async findByFilters( filters : MultiSearchFilterType ) : Promise<SearchMoviesResultType> {
+    async findByFilters( filters : MultiSearchFilter ) : Promise<SearchMoviesResult> {
 
         const querys : QueryType = {
             language: filters.language,
@@ -18,7 +19,7 @@ export class TMDBTVEndpoint extends TMDBEndpoint {
 
         const response = await this.httpClient.get( endpointURL );
 
-        const tmdbSearchMoviesResponse : TMDBSearchMoviesResponseType = await response.json();
+        const tmdbSearchMoviesResponse : TMDBSearchMoviesResponse = await response.json();
 
         return TMDBSearchMoviesMapper.toModel( tmdbSearchMoviesResponse );
 

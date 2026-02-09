@@ -1,5 +1,5 @@
-import { MultiGenreType } from "@/types/api/multi/MultiGenreType";
+import { MultiGenre } from "@/types/api/multi/MultiGenre";
 
 export abstract class GenreProviderService {
-    abstract find() : Promise<MultiGenreType>;
+    abstract find() : Promise<MultiGenre>;
 }

@@ -1,21 +1,21 @@
 import { MovieController } from "@/controllers/movie/MovieController";
 import { StatusCodes } from "@/enum/StatusCode";
-import { MultiSearchFilter, MultiSearchFilterType } from "@/types/api/MultiSearchFilterType";
-import { SearchMoviesResult, SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
-import { ErrorResponse } from "@/types/error/ErrorResponseType";
+import { MultiSearchFilterSchema, MultiSearchFilter } from "@/types/api/MultiSearchFilter";
+import { SearchMoviesResultSchema, SearchMoviesResult } from "@/types/api/SearchMoviesResult";
+import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
 import { FastifyInstance } from "fastify";
 
 export default async function movieRoutes( fastify : FastifyInstance ) {
 
-    fastify.get<{Querystring: MultiSearchFilterType, Reply: SearchMoviesResultType}>(
+    fastify.get<{Querystring: MultiSearchFilter, Reply: SearchMoviesResult}>(
         "/filters",
         {
             preHandler: [fastify.authenticate, fastify.cache],
             schema: {
-                querystring: MultiSearchFilter,
+                querystring: MultiSearchFilterSchema,
                 response: {
-                    [StatusCodes.OK]: SearchMoviesResult,
-                    [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponse
+                    [StatusCodes.OK]: SearchMoviesResultSchema,
+                    [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 }
             }
         },

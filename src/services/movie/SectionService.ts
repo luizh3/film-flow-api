@@ -1,6 +1,6 @@
-import { SearchMoviesResultType } from "@/types/api/SearchMoviesResultType";
-import { SectionFiltersType } from "@/types/api/section/SectionFiltersType";
+import { SearchMoviesResult } from "@/types/api/SearchMoviesResult";
+import { SectionFilters } from "@/types/api/section/SectionFilters";
 
 export abstract class SectionService {
-    abstract findBySection( sectionFilters : SectionFiltersType ) : Promise<SearchMoviesResultType>
+    abstract findBySection( sectionFilters : SectionFilters ) : Promise<SearchMoviesResult>
 }
