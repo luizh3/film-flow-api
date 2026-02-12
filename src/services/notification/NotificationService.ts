@@ -1,4 +1,4 @@
-import { NotificationRepository } from "@/repositorys/notification/NotificationRepository";
+import { NotificationRepository } from "@/repositories/notification/NotificationRepository";
 import { Pagination } from "@/types/api/Pagination";
 import { Notification, Prisma } from "@prisma/client";
 

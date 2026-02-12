@@ -3,7 +3,7 @@ import { User } from "@prisma/client";
 
 import { UserService } from "@/services/customer/UserService"
 import { UserType } from "@/types/customer/UserType";
-import { CustomerMapper } from "@/mappers/customer/UserMapper";
+import { UserMapper } from "@/mappers/customer/UserMapper";
 import { UserRequest } from "@/types/customer/UserRequest";
 import { StatusCodes } from "@/enum/StatusCode";
 import { UserUpdateRequest } from "@/types/customer/UserUpdateRequest";
@@ -26,7 +26,7 @@ export class UserController {
             id: user.userId,
         });
 
-        const userResponse = CustomerMapper.toResponse(user);
+        const userResponse = UserMapper.toResponse(user);
 
         const response: LoginResponse = {
             accessToken,
@@ -41,14 +41,14 @@ export class UserController {
 
         logger.debug("UserController[insert] Inserting user")
 
-        const userRequest = CustomerMapper.toModel(request.body as UserRequest);
+        const userRequest = UserMapper.toModel(request.body as UserRequest);
 
         const userService = new UserService();
         const userResponse: User = await userService.insert(userRequest);
 
         logger.debug("UserController[insert] User insert sucesfull")
 
-        reply.status(StatusCodes.OK).send(CustomerMapper.toResponse(userResponse));
+        reply.status(StatusCodes.OK).send(UserMapper.toResponse(userResponse));
     }
 
     async update(request: FastifyRequest, reply: FastifyReply) {
@@ -68,7 +68,7 @@ export class UserController {
 
         logger.debug("UserController[update] User update sucesfull")
 
-        reply.status(StatusCodes.OK).send(CustomerMapper.toResponse(userResponse));
+        reply.status(StatusCodes.OK).send(UserMapper.toResponse(userResponse));
     }
 
     async delete(request: FastifyRequest, reply: FastifyReply) {
@@ -82,7 +82,7 @@ export class UserController {
         const userService = new UserService();
         const userResponse: User = await userService.findOne(userId);
 
-        reply.status(StatusCodes.OK).send(CustomerMapper.toResponse(userResponse));
+        reply.status(StatusCodes.OK).send(UserMapper.toResponse(userResponse));
 
     }
 

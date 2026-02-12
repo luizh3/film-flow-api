@@ -1,7 +1,7 @@
 import { StatusCodes } from "@/enum/StatusCode"
-import { ApiExption } from "./ApiException"
+import { ApiException } from "./ApiException"
 
-export class NotFoundException extends ApiExption {
+export class NotFoundException extends ApiException {
     constructor( message : string  ) {
         super( StatusCodes.NOT_FOUND, message )
     }

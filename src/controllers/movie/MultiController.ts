@@ -19,8 +19,6 @@ export class MultiController {
 
     public findByName = async (request: FastifyRequest, reply: FastifyReply) => {
 
-        console.log(request.originalUrl)
-
         const filters = request.query as MultiFiltersParams;
 
         const multiService = MultiServiceFactory.create(ApiConfig.getTpProvider());
@@ -74,6 +72,7 @@ export class MultiController {
         }) ?? [];
 
         await new Promise(resolve => setTimeout(resolve, 1000));
+
 
         reply.status(StatusCodes.OK).send({
             reviews: reviewResponse,

@@ -61,8 +61,6 @@ export class TMDBSectionEndpoint extends TMDBEndpoint {
 
         const endpointURL = this.httpClient.toURL(baseURL, querys);
 
-        console.log(endpointURL);
-
         const response = await this.httpClient.get(endpointURL);
 
         const tmdbSearchMoviesResponse: TMDBSearchMoviesResponse = await response.json();

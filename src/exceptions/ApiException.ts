@@ -1,4 +1,4 @@
-export class ApiExption extends Error {
+export class ApiException extends Error {
 
     statusCode: number;
 

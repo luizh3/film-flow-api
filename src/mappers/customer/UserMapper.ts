@@ -3,7 +3,7 @@ import { UserType } from "@/types/customer/UserType"
 import { UserRequest } from "@/types/customer/UserRequest"
 import { UserResponse } from "@/types/customer/UserResponse"
 
-export class CustomerMapper {
+export class UserMapper {
 
     static toResponse( model : User ) : UserResponse {
         return {

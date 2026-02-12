@@ -26,12 +26,13 @@ export default async function ReviewRoutes(fastify: FastifyInstance) {
         new ReviewController().insert
     );
 
-    fastify.put<{ Body: UpdateReviewRequest, Reply: ReviewResponse }>(
-        "/",
+    fastify.put<{ Body: UpdateReviewRequest, Params: LikeReviewParams, Reply: ReviewResponse }>(
+        "/:id",
         {
             preHandler: [fastify.authenticate],
             schema: {
                 body: UpdateReviewRequestSchema,
+                params: LikeReviewParamsSchema,
                 response: {
                     [StatusCodes.OK]: ReviewResponseSchema,
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema

@@ -27,8 +27,6 @@ export class TMDBSearchMultiEndpoint extends TMDBEndpoint {
 
         const tmdbSearchMoviesResponse: TMDBSearchMoviesResponse = await response.json();
 
-        console.log(tmdbSearchMoviesResponse)
-
         return TMDBSearchMoviesMapper.toModel(tmdbSearchMoviesResponse);
 
     }
@@ -54,13 +52,9 @@ export class TMDBSearchMultiEndpoint extends TMDBEndpoint {
 
         const endpointURL = this.httpClient.toURL(baseURL, querys);
 
-        console.log(endpointURL)
-
         const response = await this.httpClient.get(endpointURL);
 
         const tmdbSearchMoviesResponse: TMDBMovieInformationResponse = await response.json();
-
-        console.log(tmdbSearchMoviesResponse)
 
         return TMDBMovieInformationMapper.toModel(tmdbSearchMoviesResponse, type);
 

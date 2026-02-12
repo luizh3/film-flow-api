@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import { UserType } from "@/types/customer/UserType";
-import { UserRepository } from "@/repositorys/costumer/UserRepository"
+import { UserRepository } from "@/repositories/customer/UserRepository"
 import { NotFoundException } from "@/exceptions/NotFoundException";
 import { InternalErrorException } from "@/exceptions/InternalErrorException";
 import { LoginRequest } from "@/types/login/LoginRequest";
@@ -61,9 +61,7 @@ export class UserService {
 
         const repository = new UserRepository();
 
-        const users = repository.findManyByIds(userIds);
-
-        return users;
+        return await repository.findManyByIds(userIds);
 
     }
 }

@@ -1,5 +1,6 @@
+import { InternalErrorException } from "@/exceptions/InternalErrorException";
 import { NotFoundException } from "@/exceptions/NotFoundException";
-import { ReviewRepository } from "@/repositorys/review/ReviewRepository";
+import { ReviewRepository } from "@/repositories/review/ReviewRepository";
 import { Pagination } from "@/types/api/Pagination";
 import { ReviewWithLikes } from "@/types/prisma/ReviewWithLikes";
 import { Prisma, Review } from "@prisma/client";
@@ -28,13 +29,21 @@ export default class ReviewService {
 
     }
 
-    async update(reviewId: string, data: Prisma.ReviewUpdateInput) {
+    async update(reviewId: string, userId: string, data: Prisma.ReviewUpdateInput) {
 
         const repository = new ReviewRepository();
 
-        const review = await repository.update(reviewId, data);
+        const review = await repository.findOne(reviewId);
 
-        return review;
+        if (!review) {
+            throw new NotFoundException("Review not found!");
+        }
+
+        if (review.authorId !== userId) {
+            throw new InternalErrorException("Not allowed to update this review");
+        }
+
+        return await repository.update(reviewId, data);
 
     }
 

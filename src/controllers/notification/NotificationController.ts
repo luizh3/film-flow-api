@@ -15,8 +15,6 @@ export class NotificationController {
         const userId = request.user.id;
         const filters = request.query as FindAllNotificationRequest;
 
-        console.log(filters)
-
         const notificationService = new NotificationService();
         const userService = new UserService();
 
@@ -49,8 +47,6 @@ export class NotificationController {
                 throw new InternalErrorException('Actor not found!');
             }
 
-            console.log(actor)
-
             return {
                 type: notification.type,
                 data: {
@@ -75,8 +71,6 @@ export class NotificationController {
             notifications: notificationsResponse,
             ...pagination
         }
-
-        console.log(response)
 
         return reply.send(response);
     }

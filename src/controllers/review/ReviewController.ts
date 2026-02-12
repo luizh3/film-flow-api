@@ -3,8 +3,6 @@ import { ReviewMapper } from "@/mappers/review/ReviewMapper";
 import LikeReviewService from "@/services/like/LikeReviewService";
 import { NotificationService } from "@/services/notification/NotificationService";
 import ReviewService from "@/services/review/ReviewService";
-import { NotificationEventType } from "@/types/notifications/NotificationEvent";
-import { NotificationStatusType } from "@/types/notifications/NotificationStatusType";
 import { CreateReviewRequest } from "@/types/review/CreateReviewRequest";
 import { FindAllParamsRequest } from "@/types/review/FindAllParamsRequest";
 import { LikeReviewParams } from "@/types/review/LikeReviewParams";
@@ -31,14 +29,14 @@ export class ReviewController {
     async update(request: FastifyRequest, reply: FastifyReply) {
 
         const userId = request.user.id;
-
+        const reviewId = (request.params as LikeReviewParams).id;
         const reviewRequest = request.body as UpdateReviewRequest;
 
-        var reviewUpdated = ReviewMapper.toUpdate(reviewRequest);
+        const reviewUpdated = ReviewMapper.toUpdate(reviewRequest);
 
         const service = new ReviewService();
 
-        const reviewResult = await service.update(userId, reviewUpdated);
+        const reviewResult = await service.update(reviewId, userId, reviewUpdated);
 
         reply.status(StatusCodes.OK).send(ReviewMapper.toResponse(reviewResult));
 
@@ -57,8 +55,6 @@ export class ReviewController {
         const reviewResponse = reviewResult[0]?.map((review) => {
             return ReviewMapper.toResponseWithLikes(review)
         }) ?? [];
-
-        await new Promise(resolve => setTimeout(resolve, 5000));
 
         reply.status(StatusCodes.OK).send({
             reviews: reviewResponse,
@@ -85,42 +81,17 @@ export class ReviewController {
         const userId = request.user.id;
         const reviewId = (request.params as LikeReviewParams).id;
 
-        const likeReviewService = new LikeReviewService();
         const reviewService = new ReviewService();
-
-        const notificationService = new NotificationService();
-
         const review = await reviewService.findOne(reviewId);
 
-        await likeReviewService.like({
-            userId: userId,
-            reviewId: reviewId
-        });
-
-        // TODO mover para algum lugar 
-        const notification = {
-            type: NotificationEventType.REVIEW_LIKE,
-            data: {
-                reviewId: reviewId,
-                actorId: userId,
-                program: {
-                    id: review.movieId,
-                    type: review.programType,
-                    title: review.programTitle
-                }
+        const likeReviewService = new LikeReviewService();
+        await likeReviewService.like(
+            { userId, reviewId },
+            {
+                review,
+                notificationService: new NotificationService(),
+                notificationsManager
             }
-        }
-
-        await notificationService.insert({
-            type: NotificationEventType.REVIEW_LIKE,
-            payload: notification,
-            status: NotificationStatusType.SEND,
-            recipientId: review.authorId
-        });
-
-        notificationsManager.notify(
-            review.authorId,
-            notification
         );
 
         reply.status(StatusCodes.OK);

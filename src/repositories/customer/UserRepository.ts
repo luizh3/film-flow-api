@@ -8,8 +8,8 @@ import { logger } from "@/utils/Logger";
 export class UserRepository {
 
     async insert(user: UserType): Promise<User> {
-        return await prismaClient.user.create({ data: user }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        return await prismaClient.user.create({ data: user }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on register user!")
         });
     }
@@ -23,8 +23,8 @@ export class UserRepository {
                 avatarUrl: user.avatarUrl,
                 name: user.name,
             }
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on update user!")
         });
     }
@@ -34,8 +34,8 @@ export class UserRepository {
             where: {
                 email: email,
             },
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on find user!")
         });
     }
@@ -45,8 +45,8 @@ export class UserRepository {
             where: {
                 userId: userId,
             },
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on find user!")
         });
     }

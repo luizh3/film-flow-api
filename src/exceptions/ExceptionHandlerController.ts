@@ -1,6 +1,6 @@
 import { ErrorResponse } from "@/types/error/ErrorResponse";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ApiExption } from "./ApiException";
+import { ApiException } from "./ApiException";
 import { logger } from "@/utils/Logger";
 import { StatusCodes } from "@/enum/StatusCode";
 
@@ -18,7 +18,7 @@ export class ExceptionHandlingController {
 
         const response : ErrorResponse = this.toResponse( error.message, request.url );
     
-        if( error instanceof ApiExption ) {
+        if( error instanceof ApiException ) {
             reply.status( error.statusCode ).send( response )
             return;
         }

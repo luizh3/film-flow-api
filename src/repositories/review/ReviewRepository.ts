@@ -7,8 +7,8 @@ import { Prisma, Review } from "@prisma/client";
 export class ReviewRepository {
 
     async insert(data: Prisma.ReviewCreateInput): Promise<Review> {
-        return await prismaClient.review.create({ data }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        return await prismaClient.review.create({ data }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on insert review!");
         });
     }
@@ -19,8 +19,8 @@ export class ReviewRepository {
                 reviewId: reviewId
             },
             data: data
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on update review!");
         });
     }
@@ -47,8 +47,8 @@ export class ReviewRepository {
                     }
                 }
             },
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on find reviews!");
         })
     }
@@ -75,8 +75,8 @@ export class ReviewRepository {
                     }
                 }
             },
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on find reviews!");
         })
     }
@@ -86,8 +86,8 @@ export class ReviewRepository {
             where: {
                 movieId: movieId
             },
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on find reviews count!");
         })
     }
@@ -111,8 +111,8 @@ export class ReviewRepository {
                     authorId: userId
                 }
             }
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on find review!");
         })
     }
@@ -122,11 +122,10 @@ export class ReviewRepository {
             where: {
                 reviewId
             }
-        }).catch((exption: Error) => {
-            logger.error({ message: exption.message });
+        }).catch((exception: Error) => {
+            logger.error({ message: exception.message });
             throw new InternalErrorException("Failed on find review!");
         })
     }
 
 }
-

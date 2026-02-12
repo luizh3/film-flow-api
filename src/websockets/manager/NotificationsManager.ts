@@ -22,15 +22,11 @@ export class NotificationsManager {
 
         const sockets = this.connections.get(userId);
 
-        console.log(this.connections)
-
         if (!sockets) {
             return
         };
 
         const message = JSON.stringify(payload);
-
-        console.log(message)
 
         for (const socket of sockets) {
             if (socket.readyState === WebSocket.OPEN) {
