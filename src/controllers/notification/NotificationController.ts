@@ -10,15 +10,17 @@ import { FastifyReply, FastifyRequest } from "fastify";
 
 export class NotificationController {
 
+    constructor(
+        private readonly notificationService: NotificationService,
+        private readonly userService: UserService
+    ) {}
+
     async findAll(request: FastifyRequest, reply: FastifyReply) {
 
         const userId = request.user.id;
         const filters = request.query as FindAllNotificationRequest;
 
-        const notificationService = new NotificationService();
-        const userService = new UserService();
-
-        const notificationsPaginated = await notificationService.findAllByIdRecipient(userId, filters.page);
+        const notificationsPaginated = await this.notificationService.findAllByIdRecipient(userId, filters.page);
 
         const notifications = notificationsPaginated[0];
         const pagination = notificationsPaginated[1];
@@ -30,7 +32,7 @@ export class NotificationController {
             actorIds.add(payload.data.actorId);
         }
 
-        const actors = await userService.findManyByIds([...actorIds]);
+        const actors = await this.userService.findManyByIds([...actorIds]);
 
         const actorsMap = new Map<string, UserType>();
         for (const actor of actors) {

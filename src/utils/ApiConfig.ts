@@ -4,16 +4,17 @@ import { logger } from "./Logger";
 
 class ApiConfig {
 
-    private readonly tpProvider : MovieProviderEnum = process.env.TP_PROVIDER as MovieProviderEnum;
-
     public getTpProvider = () => {
-        
-        if( this.tpProvider !== MovieProviderEnum.UNKNOW ) {
-            return this.tpProvider;
+
+        const tpProvider: MovieProviderEnum = process.env.TP_PROVIDER as MovieProviderEnum;
+
+        if (tpProvider !== MovieProviderEnum.UNKNOW) {
+            return tpProvider;
         }
 
         logger.error("Provider not found!")
-        throw new InternalErrorException( "Provider not found!" );
+
+        throw new InternalErrorException("Provider not found!");
     }
 
 }

@@ -14,13 +14,13 @@ import { LoginResponse } from "@/types/login/LoginResponse";
 
 export class UserController {
 
+    constructor(private readonly userService: UserService) {}
+
     async login(request: FastifyRequest, reply: FastifyReply) {
 
         const loginRequest = request.body as LoginRequest;
 
-        const userService = new UserService();
-
-        const user = await userService.login(loginRequest);
+        const user = await this.userService.login(loginRequest);
 
         const accessToken = request.jwt.sign({
             id: user.userId,
@@ -43,8 +43,7 @@ export class UserController {
 
         const userRequest = UserMapper.toModel(request.body as UserRequest);
 
-        const userService = new UserService();
-        const userResponse: User = await userService.insert(userRequest);
+        const userResponse: User = await this.userService.insert(userRequest);
 
         logger.debug("UserController[insert] User insert sucesfull")
 
@@ -63,8 +62,7 @@ export class UserController {
             userId: userUpdateRequest.userId
         };
 
-        const userService = new UserService();
-        const userResponse: User = await userService.update(user);
+        const userResponse: User = await this.userService.update(user);
 
         logger.debug("UserController[update] User update sucesfull")
 
@@ -79,8 +77,7 @@ export class UserController {
 
         const userId = (request.params as ParamsUserId).userId;
 
-        const userService = new UserService();
-        const userResponse: User = await userService.findOne(userId);
+        const userResponse: User = await this.userService.findOne(userId);
 
         reply.status(StatusCodes.OK).send(UserMapper.toResponse(userResponse));
 

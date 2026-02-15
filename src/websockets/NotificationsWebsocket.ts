@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { type WebSocket } from '@fastify/websocket';
+import { logger } from "@/utils/Logger";
 
 interface NotificationsQuery {
     token: string;
@@ -16,7 +17,7 @@ export async function notificationsWebsocket(
             const token = request.headers.authorization;
 
             if (!token) {
-                console.log("Invalid token")
+                logger.error("Invalid token")
                 return;
             }
 

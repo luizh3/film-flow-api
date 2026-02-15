@@ -9,7 +9,12 @@ import { ReviewResponseSchema, ReviewResponse } from "@/types/review/ReviewRespo
 import { UpdateReviewRequestSchema, UpdateReviewRequest } from "@/types/review/UpdateReviewRequest";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-export default async function ReviewRoutes(fastify: FastifyInstance) {
+export default async function ReviewRoutes(
+    fastify: FastifyInstance,
+    options: { reviewController: ReviewController }
+) {
+
+    const { reviewController } = options;
 
     fastify.post<{ Body: CreateReviewRequest, Reply: ReviewResponse }>(
         "/",
@@ -23,7 +28,7 @@ export default async function ReviewRoutes(fastify: FastifyInstance) {
                 }
             }
         },
-        new ReviewController().insert
+        reviewController.insert.bind(reviewController)
     );
 
     fastify.put<{ Body: UpdateReviewRequest, Params: LikeReviewParams, Reply: ReviewResponse }>(
@@ -39,7 +44,7 @@ export default async function ReviewRoutes(fastify: FastifyInstance) {
                 }
             }
         },
-        new ReviewController().update
+        reviewController.update.bind(reviewController)
     );
 
     fastify.get<{ Querystring: FindAllParamsRequest, Reply: FindAllReviewResponse }>(
@@ -54,7 +59,7 @@ export default async function ReviewRoutes(fastify: FastifyInstance) {
                 }
             }
         },
-        new ReviewController().findAllById
+        reviewController.findAllById.bind(reviewController)
     )
 
     fastify.post<{ Params: LikeReviewParams }>(
@@ -69,7 +74,7 @@ export default async function ReviewRoutes(fastify: FastifyInstance) {
             }
         },
         (request: FastifyRequest, reply: FastifyReply) => {
-            return new ReviewController().like(request, reply, fastify.notificationsManager);
+            return reviewController.like(request, reply, fastify.notificationsManager);
         }
     )
 
@@ -84,9 +89,7 @@ export default async function ReviewRoutes(fastify: FastifyInstance) {
                 }
             }
         },
-        (request: FastifyRequest, reply: FastifyReply) => {
-            return new ReviewController().unlike(request, reply);
-        }
+        reviewController.unlike.bind(reviewController)
     )
 
 }

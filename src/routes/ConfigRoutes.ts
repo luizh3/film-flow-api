@@ -1,24 +1,34 @@
 import { FastifyInstance } from "fastify";
 
+import { ConfigController } from "@/controllers/config/ConfigController";
 import { StatusCodes } from "@/enum/StatusCode";
 import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
 import { ConfigSchema, Config } from "@/types/api/config/Config";
-import { ConfigController } from "@/controllers/config/ConfigController";
 
-export default async function configRoutes( fastify: FastifyInstance ) {
+export default async function configRoutes(
+    fastify: FastifyInstance,
+    options: { configController: ConfigController }
+) {
+
+    const { configController } = options;
 
     fastify.get<{ Reply: Config }>(
         "/",
         {
-            preHandler: [fastify.authenticate, fastify.cache],
+            preHandler: [fastify.authenticate, fastify.serverCache],
             schema: {
                 response: {
                     [StatusCodes.OK]: ConfigSchema,
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 }
+            },
+            config: {
+                clientCache: {
+                    privacy: 'private',
+                }
             }
         },
-        new ConfigController().find
+        configController.find.bind(configController)
     )
 
 }

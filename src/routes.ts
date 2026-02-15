@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyPluginOptions, FastifyRequest, FastifyReply } from "fastify";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
 
 import userRoutes from "./routes/UserRoutes";
 import configRoutes from "./routes/ConfigRoutes";
@@ -9,17 +9,20 @@ import sectionRoutes from "./routes/SectionRoute";
 import authRoutes from "./routes/AuthRoutes";
 import reviewRoutes from "./routes/ReviewRoutes";
 import notificationRoutes from "./routes/NotificationRoutes";
+import type { Container } from "@/container";
 
-export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
+export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions & { container: Container }) {
 
-    fastify.register(userRoutes, { prefix: "/user" });
-    fastify.register(multiRoutes, { prefix: "/multi" });
-    fastify.register(configRoutes, { prefix: "/config" });
-    fastify.register(movieRoutes, { prefix: "/movie" });
-    fastify.register(tvRoutes, { prefix: "/tv" });
-    fastify.register(sectionRoutes, { prefix: "/section" });
-    fastify.register(authRoutes, { prefix: "/auth" });
-    fastify.register(reviewRoutes, { prefix: "/review" });
-    fastify.register(notificationRoutes, { prefix: "/notification" });
+    const { container } = options;
+
+    fastify.register(userRoutes, { prefix: "/user", userController: container.userController });
+    fastify.register(multiRoutes, { prefix: "/multi", multiController: container.multiController });
+    fastify.register(configRoutes, { prefix: "/config", configController: container.configController });
+    fastify.register(movieRoutes, { prefix: "/movie", movieController: container.movieController });
+    fastify.register(tvRoutes, { prefix: "/tv", tvController: container.tvController });
+    fastify.register(sectionRoutes, { prefix: "/section", sectionController: container.sectionController });
+    fastify.register(authRoutes, { prefix: "/auth", userController: container.userController });
+    fastify.register(reviewRoutes, { prefix: "/review", reviewController: container.reviewController });
+    fastify.register(notificationRoutes, { prefix: "/notification", notificationController: container.notificationController });
 
 }

@@ -1,11 +1,12 @@
 import { User } from "@prisma/client";
 import { UserType } from "@/types/customer/UserType"
 import { InternalErrorException } from "@/exceptions/InternalErrorException";
+import { IUserRepository } from "@/ports/repositories/IUserRepository";
 
 import prismaClient from "@/config/prisma"
 import { logger } from "@/utils/Logger";
 
-export class UserRepository {
+export class UserRepository implements IUserRepository {
 
     async insert(user: UserType): Promise<User> {
         return await prismaClient.user.create({ data: user }).catch((exception: Error) => {

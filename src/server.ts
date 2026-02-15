@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import websocket from "@fastify/websocket";
 
 import { routes } from "@/routes";
+import { createContainer } from "@/container";
 import { ExceptionHandlingController } from "./exceptions/ExceptionHandlerController";
 
 import swaggerConfig from "./config/swagger/SwaggerConfig";
@@ -13,10 +14,13 @@ import { cache } from "./config/cache/Cache";
 import cacheMiddleware from "./config/cache/CacheMiddleware";
 import websocketConfig from "./config/websocket/WebsocketConfig";
 import { websocketsRoutes } from "./websocketsRoutes";
+import caching from '@fastify/caching'
 
 const fastify = Fastify({
   logger: true
 });
+
+fastify.register(caching)
 
 cacheConfig();
 logerConfig(fastify);
@@ -29,7 +33,9 @@ fastify.register(cors);
 fastify.register(websocket);
 
 fastify.register(websocketsRoutes);
-fastify.register(routes, { prefix: "/api" });
+
+const container = createContainer();
+fastify.register(routes, { prefix: "/api", container });
 
 fastify.setErrorHandler(new ExceptionHandlingController().handle);
 

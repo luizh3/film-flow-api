@@ -12,15 +12,19 @@ import { FastifyReply, FastifyRequest } from "fastify";
 
 export class ReviewController {
 
+    constructor(
+        private readonly reviewService: ReviewService,
+        private readonly likeReviewService: LikeReviewService,
+        private readonly notificationService: NotificationService
+    ) { }
+
     async insert(request: FastifyRequest, reply: FastifyReply) {
 
         const reviewRequest = request.body as CreateReviewRequest;
 
         var reviewCreate = ReviewMapper.toCreate(reviewRequest, request.user.id);
 
-        const service = new ReviewService();
-
-        const reviewResult = await service.insert(reviewCreate);
+        const reviewResult = await this.reviewService.insert(reviewCreate);
 
         reply.status(StatusCodes.OK).send(ReviewMapper.toResponse(reviewResult));
 
@@ -34,9 +38,7 @@ export class ReviewController {
 
         const reviewUpdated = ReviewMapper.toUpdate(reviewRequest);
 
-        const service = new ReviewService();
-
-        const reviewResult = await service.update(reviewId, userId, reviewUpdated);
+        const reviewResult = await this.reviewService.update(reviewId, userId, reviewUpdated);
 
         reply.status(StatusCodes.OK).send(ReviewMapper.toResponse(reviewResult));
 
@@ -48,9 +50,7 @@ export class ReviewController {
 
         const userId = request.user.id;
 
-        const service = new ReviewService();
-
-        const reviewResult = await service.findAllByIdUser(userId, filters.page);
+        const reviewResult = await this.reviewService.findAllByIdUser(userId, filters.page);
 
         const reviewResponse = reviewResult[0]?.map((review) => {
             return ReviewMapper.toResponseWithLikes(review)
@@ -68,9 +68,7 @@ export class ReviewController {
         const userId = request.user.id;
         const reviewId = (request.params as LikeReviewParams).id;
 
-        const likeReviewService = new LikeReviewService();
-
-        await likeReviewService.unlike(userId, reviewId);
+        await this.likeReviewService.unlike(userId, reviewId);
 
         reply.status(StatusCodes.OK);
 
@@ -81,15 +79,13 @@ export class ReviewController {
         const userId = request.user.id;
         const reviewId = (request.params as LikeReviewParams).id;
 
-        const reviewService = new ReviewService();
-        const review = await reviewService.findOne(reviewId);
+        const review = await this.reviewService.findOne(reviewId);
 
-        const likeReviewService = new LikeReviewService();
-        await likeReviewService.like(
+        await this.likeReviewService.like(
             { userId, reviewId },
             {
                 review,
-                notificationService: new NotificationService(),
+                notificationService: this.notificationService,
                 notificationsManager
             }
         );

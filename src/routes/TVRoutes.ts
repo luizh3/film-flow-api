@@ -5,21 +5,31 @@ import { SearchMoviesResultSchema, SearchMoviesResult } from "@/types/api/Search
 import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
 import { FastifyInstance } from "fastify";
 
-export default async function tvRoutes( fastify : FastifyInstance ) {
+export default async function tvRoutes(
+    fastify: FastifyInstance,
+    options: { tvController: TVController }
+) {
 
-    fastify.get<{Querystring: MultiSearchFilter, Reply: SearchMoviesResult}>(
+    const { tvController } = options;
+
+    fastify.get<{ Querystring: MultiSearchFilter, Reply: SearchMoviesResult }>(
         "/filters",
         {
-            preHandler: [fastify.authenticate, fastify.cache],
+            preHandler: [fastify.authenticate, fastify.serverCache],
             schema: {
                 querystring: MultiSearchFilterSchema,
                 response: {
                     [StatusCodes.OK]: SearchMoviesResultSchema,
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 }
+            },
+            config: {
+                clientCache: {
+                    privacy: 'private',
+                }
             }
         },
-        new TVController().findByFilters
-    ) 
+        tvController.findByFilters.bind(tvController)
+    )
 
 }

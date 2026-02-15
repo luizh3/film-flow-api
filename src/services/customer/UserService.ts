@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import { UserType } from "@/types/customer/UserType";
-import { UserRepository } from "@/repositories/customer/UserRepository"
+import { IUserRepository } from "@/ports/repositories/IUserRepository";
 import { NotFoundException } from "@/exceptions/NotFoundException";
 import { InternalErrorException } from "@/exceptions/InternalErrorException";
 import { LoginRequest } from "@/types/login/LoginRequest";
@@ -9,13 +9,13 @@ import bcrypt from 'bcrypt'
 
 export class UserService {
 
+    constructor(private readonly repository: IUserRepository) {}
+
     async insert(newUser: UserType): Promise<User> {
 
         const SALT_ROUNDS: number = 10
 
-        const repository = new UserRepository()
-
-        const userRegister = await repository.findOneByEmail(newUser.email);
+        const userRegister = await this.repository.findOneByEmail(newUser.email);
 
         if (userRegister) {
             throw new InternalErrorException("E-mail already registered!");
@@ -23,17 +23,16 @@ export class UserService {
 
         newUser.password = await bcrypt.hash(newUser.password, SALT_ROUNDS)
 
-        return await repository.insert(newUser)
+        return await this.repository.insert(newUser)
     }
 
     async update(user: Partial<UserType>): Promise<User> {
-        return await new UserRepository().update(user);
+        return await this.repository.update(user);
     }
 
     async findOne(userId: string): Promise<User> {
 
-        const repository = new UserRepository();
-        const user = await repository.findOne(userId);
+        const user = await this.repository.findOne(userId);
 
         if (!user) {
             throw new NotFoundException("User not found!");
@@ -44,9 +43,7 @@ export class UserService {
 
     async login(loginRequest: LoginRequest): Promise<User> {
 
-        const repository = new UserRepository();
-
-        const userRegister = await repository.findOneByEmail(loginRequest.email);
+        const userRegister = await this.repository.findOneByEmail(loginRequest.email);
 
         const isValidUser = userRegister && await bcrypt.compare(loginRequest.password, userRegister.password);
 
@@ -58,10 +55,6 @@ export class UserService {
     }
 
     async findManyByIds(userIds: string[]): Promise<User[]> {
-
-        const repository = new UserRepository();
-
-        return await repository.findManyByIds(userIds);
-
+        return await this.repository.findManyByIds(userIds);
     }
 }

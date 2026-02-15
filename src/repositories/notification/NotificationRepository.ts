@@ -1,9 +1,10 @@
 import prismaClient from "@/config/prisma";
 import { InternalErrorException } from "@/exceptions/InternalErrorException";
 import { logger } from "@/utils/Logger";
-import { Prisma } from "@prisma/client";
+import { Notification, Prisma } from "@prisma/client";
+import { INotificationRepository } from "@/ports/repositories/INotificationRepository";
 
-export class NotificationRepository {
+export class NotificationRepository implements INotificationRepository {
 
     async insert(data: Prisma.NotificationUncheckedCreateInput) {
         return await prismaClient.notification.create({ data }).catch((exception: Error) => {

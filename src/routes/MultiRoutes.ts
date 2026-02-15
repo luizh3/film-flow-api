@@ -4,34 +4,43 @@ import { MultiController } from "@/controllers/movie/MultiController";
 import { StatusCodes } from "@/enum/StatusCode";
 import { MultiFiltersParamsSchema, MultiFiltersParams } from "@/types/api/multi/MultiFiltersParams";
 import { SearchMoviesResultSchema, SearchMoviesResult } from "@/types/api/SearchMoviesResult";
-import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
+import { ErrorResponseSchema } from "@/types/error/ErrorResponse";
 import { MultiParamsSchema, MultiParams } from "@/types/api/multi/MultiParams";
 import { MovieInformationSchema, MovieInformation } from "@/types/api/MovieInformation";
 import { FindAllParamsRequestSchema, FindAllParamsRequest } from "@/types/review/FindAllParamsRequest";
 import { FindAllReviewResponseSchema, FindAllReviewResponse } from "@/types/review/FindAllReviewResponse";
 
-export default async function multiRoutes(fastify: FastifyInstance) {
+export default async function multiRoutes(
+    fastify: FastifyInstance,
+    options: { multiController: MultiController }
+) {
+
+    const { multiController } = options;
 
     fastify.get<{ Querystring: MultiFiltersParams, Reply: SearchMoviesResult }>(
         "/",
         {
-            preHandler: [fastify.authenticate, fastify.cache],
+            preHandler: [fastify.authenticate, fastify.serverCache],
             schema: {
                 querystring: MultiFiltersParamsSchema,
                 response: {
                     [StatusCodes.OK]: SearchMoviesResultSchema,
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 }
+            },
+            config: {
+                clientCache: {
+                    privacy: 'private',
+                }
             }
         },
-        new MultiController().findByName
+        multiController.findByName.bind(multiController)
     )
 
     fastify.get<{ Params: MultiParams, Querystring: MultiFiltersParams, Reply: MovieInformation }>(
         "/:id",
         {
-            // fastify.cache
-            preHandler: [fastify.authenticate],
+            preHandler: [fastify.authenticate, fastify.serverCache],
             schema: {
                 params: MultiParamsSchema,
                 querystring: MultiFiltersParamsSchema,
@@ -39,9 +48,14 @@ export default async function multiRoutes(fastify: FastifyInstance) {
                     [StatusCodes.OK]: MovieInformationSchema,
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 }
+            },
+            config: {
+                clientCache: {
+                    privacy: 'private',
+                }
             }
         },
-        new MultiController().findById
+        multiController.findById.bind(multiController)
     )
 
     fastify.get<{ Params: MultiParams, Querystring: FindAllParamsRequest, Reply: FindAllReviewResponse }>(
@@ -55,9 +69,14 @@ export default async function multiRoutes(fastify: FastifyInstance) {
                     [StatusCodes.OK]: FindAllReviewResponseSchema,
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 }
+            },
+            config: {
+                clientCache: {
+                    privacy: 'private',
+                }
             }
         },
-        new MultiController().findAllReviewsByIdMovie
+        multiController.findAllReviewsByIdMovie.bind(multiController)
     )
 
 }

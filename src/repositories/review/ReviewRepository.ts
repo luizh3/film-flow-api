@@ -3,8 +3,9 @@ import { InternalErrorException } from "@/exceptions/InternalErrorException";
 import { ReviewWithLikes } from "@/types/prisma/ReviewWithLikes";
 import { logger } from "@/utils/Logger";
 import { Prisma, Review } from "@prisma/client";
+import { IReviewRepository } from "@/ports/repositories/IReviewRepository";
 
-export class ReviewRepository {
+export class ReviewRepository implements IReviewRepository {
 
     async insert(data: Prisma.ReviewCreateInput): Promise<Review> {
         return await prismaClient.review.create({ data }).catch((exception: Error) => {

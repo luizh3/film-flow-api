@@ -1,4 +1,4 @@
-import { LikeReviewRepository } from "@/repositories/like/LikeReviewRepository";
+import { ILikeReviewRepository } from "@/ports/repositories/ILikeReviewRepository";
 import { NotificationService } from "@/services/notification/NotificationService";
 import { NotificationEventType } from "@/types/notifications/NotificationEvent";
 import { NotificationStatusType } from "@/types/notifications/NotificationStatusType";
@@ -13,14 +13,14 @@ export interface LikeReviewOptions {
 
 export default class LikeReviewService {
 
+    constructor(private readonly repository: ILikeReviewRepository) {}
+
     async like(
         likeReview: Prisma.LikeReviewUncheckedCreateInput,
         options?: LikeReviewOptions
     ) {
 
-        const repository = new LikeReviewRepository();
-
-        await repository.insert(likeReview);
+        await this.repository.insert(likeReview);
 
         if (options) {
             const notification = {
@@ -49,9 +49,7 @@ export default class LikeReviewService {
 
     async unlike(userId: string, reviewId: string) {
 
-        const repository = new LikeReviewRepository();
-
-        const result = await repository.delete(userId, reviewId);
+        const result = await this.repository.delete(userId, reviewId);
 
         return result;
     }

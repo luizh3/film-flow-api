@@ -1,20 +1,18 @@
-import { MovieServiceFactory } from "@/services/movie/factory/MovieServiceFactory";
+import { MovieProviderService } from "@/services/movie/MovieProviderService";
 import { MultiSearchFilter } from "@/types/api/MultiSearchFilter";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { SearchMoviesResult } from "@/types/api/SearchMoviesResult";
 import { StatusCodes } from "@/enum/StatusCode";
 
-import ApiConfig from "@/utils/ApiConfig"
-
 export class MovieController {
+
+    constructor(private readonly movieProviderService: MovieProviderService) {}
 
     public findByFilters = async( request : FastifyRequest, reply: FastifyReply ) => {
 
         const filters = request.query as MultiSearchFilter;
 
-        const movieService = MovieServiceFactory.create( ApiConfig.getTpProvider() );
-
-        const response : SearchMoviesResult = await movieService.findByFilters( filters );
+        const response : SearchMoviesResult = await this.movieProviderService.findByFilters( filters );
 
         reply.status( StatusCodes.OK ).send( response )
 

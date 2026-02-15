@@ -1,6 +1,6 @@
 import { InternalErrorException } from "@/exceptions/InternalErrorException";
 import { NotFoundException } from "@/exceptions/NotFoundException";
-import { ReviewRepository } from "@/repositories/review/ReviewRepository";
+import { IReviewRepository } from "@/ports/repositories/IReviewRepository";
 import { Pagination } from "@/types/api/Pagination";
 import { ReviewWithLikes } from "@/types/prisma/ReviewWithLikes";
 import { Prisma, Review } from "@prisma/client";
@@ -9,11 +9,11 @@ export default class ReviewService {
 
     nrReviewByPage: number = 5;
 
+    constructor(private readonly repository: IReviewRepository) {}
+
     async insert(review: Prisma.ReviewCreateInput): Promise<Review> {
 
-        const repository = new ReviewRepository();
-
-        const reviewCreated = await repository.insert(review);
+        const reviewCreated = await this.repository.insert(review);
 
         return reviewCreated;
 
@@ -21,9 +21,7 @@ export default class ReviewService {
 
     async findOneByUserIdAndMovieId(userId: string, movieId: string) {
 
-        const repository = new ReviewRepository();
-
-        const review = await repository.findOneByUserIdAndMovieId(userId, movieId);
+        const review = await this.repository.findOneByUserIdAndMovieId(userId, movieId);
 
         return review;
 
@@ -31,9 +29,7 @@ export default class ReviewService {
 
     async update(reviewId: string, userId: string, data: Prisma.ReviewUpdateInput) {
 
-        const repository = new ReviewRepository();
-
-        const review = await repository.findOne(reviewId);
+        const review = await this.repository.findOne(reviewId);
 
         if (!review) {
             throw new NotFoundException("Review not found!");
@@ -43,15 +39,13 @@ export default class ReviewService {
             throw new InternalErrorException("Not allowed to update this review");
         }
 
-        return await repository.update(reviewId, data);
+        return await this.repository.update(reviewId, data);
 
     }
 
     async findOne(reviewId: string) {
 
-        const repository = new ReviewRepository();
-
-        const review = await repository.findOne(reviewId);
+        const review = await this.repository.findOne(reviewId);
 
         if (!review) {
             throw new NotFoundException("Review not found!");
@@ -60,11 +54,9 @@ export default class ReviewService {
         return review;
     }
 
-    async findAllByIdMovie(userId: string, movieId: string, nrPage: number): Promise<[Review[] | null, Pagination]> {
+    async findAllByIdMovie(userId: string, movieId: string, nrPage: number): Promise<[ReviewWithLikes[] | null, Pagination]> {
 
-        const repository = new ReviewRepository();
-
-        const nrAllReviews = await repository.findCountByIdMovie(movieId);
+        const nrAllReviews = await this.repository.findCountByIdMovie(movieId);
 
         const nrTotalPages = Math.max(Math.ceil(nrAllReviews / this.nrReviewByPage), 0);
 
@@ -81,7 +73,7 @@ export default class ReviewService {
 
         const offset = Math.max((nrPage - 1), 0) * this.nrReviewByPage;
 
-        const reviews = await repository.findAllByIdMovie(userId, movieId, offset, this.nrReviewByPage);
+        const reviews = await this.repository.findAllByIdMovie(userId, movieId, offset, this.nrReviewByPage);
 
         const pagination = {
             page: nrPage,
@@ -95,9 +87,7 @@ export default class ReviewService {
 
     async findAllByIdUser(userId: string, nrPage: number): Promise<[ReviewWithLikes[] | null, Pagination]> {
 
-        const repository = new ReviewRepository();
-
-        const nrAllReviews = await repository.findCountByIdUser(userId);
+        const nrAllReviews = await this.repository.findCountByIdUser(userId);
 
         const nrTotalPages = Math.max(Math.ceil(nrAllReviews / this.nrReviewByPage), 0);
 
@@ -114,7 +104,7 @@ export default class ReviewService {
 
         const offset = Math.max((nrPage - 1), 0) * this.nrReviewByPage;
 
-        const reviews = await repository.findAllByIdUser(userId, offset, this.nrReviewByPage);
+        const reviews = await this.repository.findAllByIdUser(userId, offset, this.nrReviewByPage);
 
         const pagination = {
             page: nrPage,

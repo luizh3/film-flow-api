@@ -1,38 +1,81 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { cache } from "./Cache";
 import { StatusCodes } from "@/enum/StatusCode";
+import crypto from "crypto";
+import { logger } from "@/utils/Logger";
 
-export default function cacheMiddleware ( fastify : FastifyInstance ) {
+export default function cacheMiddleware(fastify: FastifyInstance) {
 
-    fastify.decorateReply('useCache', false )
+    fastify.decorateReply('useCache', false)
 
-    fastify.addHook('onSend', ( request : FastifyRequest, reply: FastifyReply, payload : string, done ) => {
+    function clientCacheAdjust(request: FastifyRequest, reply: FastifyReply, payload: string, done: any) {
+
+        if (!reply.routeOptions.config?.clientCache) {
+            return false
+        }
+
+        const expiresIn = reply.routeOptions.config?.clientCache.expiresIn || 60
+
+        const body = typeof payload === 'string'
+            ? payload
+            : JSON.stringify(payload)
+
+        const eTag = crypto
+            .createHash('sha1')
+            .update(body)
+            .digest('hex')
+
+        reply.header('ETag', eTag)
+        reply.header('Cache-Control', `private, max-age=${expiresIn}`)
+
+        logger.info("ETag:", eTag, "If-None-Match:", request.headers['if-none-match'])
+
+        const ifNoneMatch = request.headers['if-none-match']
+
+        if (ifNoneMatch === eTag) {
+            logger.info('Cache hit: Itens are the same, returning 304 Not Modified')
+            reply.status(StatusCodes.NOT_MODIFIED)
+            done();
+            return true
+        }
+
+        return false;
+
+    }
+
+    fastify.addHook('onSend', (request: FastifyRequest, reply: FastifyReply, payload: string, done) => {
+
+        const isSendResult: boolean = clientCacheAdjust(request, reply, payload, done);
+
+        if (isSendResult) {
+            return;
+        }
 
         const isSuccessStatus = reply.statusCode === StatusCodes.OK;
 
-        if( !reply.useCache || !isSuccessStatus ) {
+        if (!reply.useCache || !isSuccessStatus) {
             done();
             return;
         }
 
-        cache.set( request.originalUrl, JSON.stringify( payload ) )
+        cache.set(request.originalUrl, JSON.stringify(payload))
 
-        done( null, payload )
+        done(null, payload)
 
     });
 
-    fastify.decorate( 
-        "cache",
-        async ( request : FastifyRequest, reply: FastifyReply ) => {
+    fastify.decorate(
+        "serverCache",
+        async (request: FastifyRequest, reply: FastifyReply) => {
 
-            const data = await cache.get( request.originalUrl );
+            const data = await cache.get(request.originalUrl);
 
-            if( !data ) {
+            if (!data) {
                 reply.useCache = true;
                 return;
             }
 
-            return reply.status( StatusCodes.OK ).send( JSON.parse( data ) );
+            return reply.status(StatusCodes.OK).send(JSON.parse(data));
         }
     )
 }

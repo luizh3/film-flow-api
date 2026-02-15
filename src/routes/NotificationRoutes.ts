@@ -6,7 +6,12 @@ import { NotificationController } from '@/controllers/notification/NotificationC
 import { NotificationResultsResponse, NotificationResultsResponseSchema } from '@/types/notifications/NotificationResultsResponse';
 import { FindAllNotificationRequest, FindAllNotificationRequestSchema } from '@/types/notifications/FindAllNotificationRequest';
 
-export default async function notificationRoutes(fastify: FastifyInstance) {
+export default async function notificationRoutes(
+    fastify: FastifyInstance,
+    options: { notificationController: NotificationController }
+) {
+
+    const { notificationController } = options;
 
     fastify.get<{ Querystring: FindAllNotificationRequest, Reply: NotificationResultsResponse }>(
         '/',
@@ -20,7 +25,7 @@ export default async function notificationRoutes(fastify: FastifyInstance) {
                 },
             },
         },
-        new NotificationController().findAll
+        notificationController.findAll.bind(notificationController)
     );
 
 }

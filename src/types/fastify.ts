@@ -7,7 +7,7 @@ declare module 'fastify' {
   }
   export interface FastifyInstance {
     authenticate: any,
-    cache: any
+    serverCache: any
   }
   interface FastifyReply {
     useCache: boolean
@@ -27,5 +27,15 @@ declare module '@fastify/jwt' {
 declare module "fastify" {
   interface FastifyInstance {
     notificationsManager: NotificationsManager;
+  }
+}
+
+declare module 'fastify' {
+  interface FastifyContextConfig {
+    clientCache?: {
+      privacy?: 'public' | 'private'
+      expiresIn?: number,
+      hasEtag?: boolean
+    }
   }
 }

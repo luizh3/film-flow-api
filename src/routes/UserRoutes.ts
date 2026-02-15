@@ -8,7 +8,12 @@ import { UserUpdateRequestSchema, UserUpdateRequest } from '@/types/customer/Use
 import { ErrorResponseSchema, ErrorResponse } from '@/types/error/ErrorResponse';
 import { ParamsUserIdSchema, ParamsUserId } from '@/types/params/user/ParamsUserId';
 
-export default async function userRoutes( fastify: FastifyInstance ) {
+export default async function userRoutes(
+    fastify: FastifyInstance,
+    options: { userController: UserController }
+) {
+
+    const { userController } = options;
 
     fastify.put<{ Body: UserUpdateRequest, Reply: UserResponse }>(
         '/',
@@ -22,7 +27,7 @@ export default async function userRoutes( fastify: FastifyInstance ) {
                 },
             },
         },
-        new UserController().update
+        userController.update.bind(userController)
     )
 
     fastify.get<{ Reply: UserResponse }>(
@@ -31,14 +36,14 @@ export default async function userRoutes( fastify: FastifyInstance ) {
             preHandler: [fastify.authenticate],
             schema: {
                 params: ParamsUserIdSchema,
-                response : {
+                response: {
                     [StatusCodes.OK]: UserResponseSchema,
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema,
                     [StatusCodes.NOT_FOUND]: ErrorResponseSchema
                 }
             }
         },
-        new UserController().findOne
+        userController.findOne.bind(userController)
     )
 
 }
