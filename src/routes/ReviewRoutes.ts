@@ -1,6 +1,6 @@
 import { ReviewController } from "@/controllers/review/ReviewController";
 import { StatusCodes } from "@/enum/StatusCode";
-import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
+import { ErrorResponseSchema } from "@/types/error/ErrorResponse";
 import { CreateReviewRequestSchema, CreateReviewRequest } from "@/types/review/CreateReviewRequest";
 import { FindAllParamsRequestSchema, FindAllParamsRequest } from "@/types/review/FindAllParamsRequest";
 import { FindAllReviewResponseSchema, FindAllReviewResponse } from "@/types/review/FindAllReviewResponse";

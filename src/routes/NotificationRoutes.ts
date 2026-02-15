@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 
 import { StatusCodes } from '@/enum/StatusCode';
-import { ErrorResponseSchema, ErrorResponse } from '@/types/error/ErrorResponse';
+import { ErrorResponseSchema } from '@/types/error/ErrorResponse';
 import { NotificationController } from '@/controllers/notification/NotificationController';
 import { NotificationResultsResponse, NotificationResultsResponseSchema } from '@/types/notifications/NotificationResultsResponse';
 import { FindAllNotificationRequest, FindAllNotificationRequestSchema } from '@/types/notifications/FindAllNotificationRequest';

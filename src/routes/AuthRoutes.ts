@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 
 import { UserController } from '@/controllers/customer/UserController';
 import { StatusCodes } from '@/enum/StatusCode';
-import { ErrorResponseSchema, ErrorResponse } from '@/types/error/ErrorResponse';
+import { ErrorResponseSchema } from '@/types/error/ErrorResponse';
 import { LoginResponseSchema, LoginResponse } from '@/types/login/LoginResponse';
 import { LoginRequestSchema, LoginRequest } from '@/types/login/LoginRequest';
 import { UserRequestSchema, UserRequest } from '@/types/customer/UserRequest';

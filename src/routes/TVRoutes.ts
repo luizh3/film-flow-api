@@ -2,7 +2,7 @@ import { TVController } from "@/controllers/movie/TVController";
 import { StatusCodes } from "@/enum/StatusCode";
 import { MultiSearchFilterSchema, MultiSearchFilter } from "@/types/api/MultiSearchFilter";
 import { SearchMoviesResultSchema, SearchMoviesResult } from "@/types/api/SearchMoviesResult";
-import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
+import { ErrorResponseSchema } from "@/types/error/ErrorResponse";
 import { FastifyInstance } from "fastify";
 
 export default async function tvRoutes(

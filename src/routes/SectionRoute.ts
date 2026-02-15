@@ -2,7 +2,7 @@ import { SectionController } from "@/controllers/movie/SectionController";
 import { StatusCodes } from "@/enum/StatusCode";
 import { SearchMoviesResultSchema, SearchMoviesResult } from "@/types/api/SearchMoviesResult";
 import { SectionFiltersSchema, SectionFilters } from "@/types/api/section/SectionFilters";
-import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
+import { ErrorResponseSchema } from "@/types/error/ErrorResponse";
 import { FastifyInstance } from "fastify";
 
 export default async function sectionRoutes(

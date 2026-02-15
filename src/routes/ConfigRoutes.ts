@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 
 import { ConfigController } from "@/controllers/config/ConfigController";
 import { StatusCodes } from "@/enum/StatusCode";
-import { ErrorResponseSchema, ErrorResponse } from "@/types/error/ErrorResponse";
+import { ErrorResponseSchema } from "@/types/error/ErrorResponse";
 import { ConfigSchema, Config } from "@/types/api/config/Config";
 
 export default async function configRoutes(
