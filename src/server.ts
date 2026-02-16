@@ -14,12 +14,14 @@ import { cache } from "./config/cache/Cache";
 import cacheMiddleware from "./config/cache/CacheMiddleware";
 import websocketConfig from "./config/websocket/WebsocketConfig";
 import { websocketsRoutes } from "./websocketsRoutes";
+import generalConfig from "./config/cache/GeneralConfig";
 
 const fastify = Fastify({
   logger: true
 });
 
 cacheConfig();
+generalConfig(fastify);
 logerConfig(fastify);
 swaggerConfig(fastify);
 authenticationMiddleware(fastify);
