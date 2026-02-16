@@ -2,20 +2,20 @@ import { ICache, SetOptions } from "./ICache";
 
 class Cache implements ICache {
 
-    private instance : ICache | null = null;
+    private instance: ICache | null = null;
 
-    private secondsTimeToLive: number = 3600;
+    private secondsTimeToLive: number = (process.env.CACHE_DEFAULT_EXPIRES_IN ? parseInt(process.env.CACHE_DEFAULT_EXPIRES_IN) : 3600);
 
-    init( cache : ICache ) {
+    init(cache: ICache) {
         this.instance = cache;
     }
 
-    get( key: string ): Promise<string | null> {
-        return this.instance ? this.instance.get( key ) : Promise.resolve( null ) ;
+    get(key: string): Promise<string | null> {
+        return this.instance ? this.instance.get(key) : Promise.resolve(null);
     };
 
-    set( key: string, value: string, options?: SetOptions ): Promise<string | null> {
-        return this.instance ? this.instance.set( key, value, options ?? { EX: this.secondsTimeToLive } ) : Promise.resolve( null );
+    set(key: string, value: string, options?: SetOptions): Promise<string | null> {
+        return this.instance ? this.instance.set(key, value, options ?? { EX: this.secondsTimeToLive }) : Promise.resolve(null);
     };
 
     async start() {
@@ -24,4 +24,4 @@ class Cache implements ICache {
 
 }
 
-export const cache : Cache = new Cache();
+export const cache: Cache = new Cache();

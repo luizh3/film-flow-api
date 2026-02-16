@@ -14,13 +14,10 @@ import { cache } from "./config/cache/Cache";
 import cacheMiddleware from "./config/cache/CacheMiddleware";
 import websocketConfig from "./config/websocket/WebsocketConfig";
 import { websocketsRoutes } from "./websocketsRoutes";
-import caching from '@fastify/caching'
 
 const fastify = Fastify({
   logger: true
 });
-
-fastify.register(caching)
 
 cacheConfig();
 logerConfig(fastify);

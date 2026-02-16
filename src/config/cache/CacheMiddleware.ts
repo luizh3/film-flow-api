@@ -14,7 +14,7 @@ export default function cacheMiddleware(fastify: FastifyInstance) {
             return false
         }
 
-        const expiresIn = reply.routeOptions.config?.clientCache.expiresIn ?? 60
+        const expiresIn = reply.routeOptions.config?.clientCache.expiresIn ?? (process.env.CACHE_DEFAULT_EXPIRES_IN ? parseInt(process.env.CACHE_DEFAULT_EXPIRES_IN) : 3600);
 
         const hasExpiresTime = expiresIn > 0;
 
