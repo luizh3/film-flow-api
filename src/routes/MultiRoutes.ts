@@ -40,7 +40,7 @@ export default async function multiRoutes(
     fastify.get<{ Params: MultiParams, Querystring: MultiFiltersParams, Reply: MovieInformation }>(
         "/:id",
         {
-            preHandler: [fastify.authenticate, fastify.serverCache],
+            preHandler: [fastify.authenticate],
             schema: {
                 params: MultiParamsSchema,
                 querystring: MultiFiltersParamsSchema,
@@ -51,6 +51,7 @@ export default async function multiRoutes(
             },
             config: {
                 clientCache: {
+                    expiresIn: 0,
                     privacy: 'private',
                 }
             }
@@ -72,6 +73,7 @@ export default async function multiRoutes(
             },
             config: {
                 clientCache: {
+                    expiresIn: 0,
                     privacy: 'private',
                 }
             }

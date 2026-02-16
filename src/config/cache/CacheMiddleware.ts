@@ -14,7 +14,9 @@ export default function cacheMiddleware(fastify: FastifyInstance) {
             return false
         }
 
-        const expiresIn = reply.routeOptions.config?.clientCache.expiresIn || 60
+        const expiresIn = reply.routeOptions.config?.clientCache.expiresIn ?? 60
+
+        const hasExpiresTime = expiresIn > 0;
 
         const body = typeof payload === 'string'
             ? payload
@@ -26,9 +28,11 @@ export default function cacheMiddleware(fastify: FastifyInstance) {
             .digest('hex')
 
         reply.header('ETag', eTag)
-        reply.header('Cache-Control', `private, max-age=${expiresIn}`)
+        reply.header(
+            'Cache-Control', hasExpiresTime ? `private, max-age=${expiresIn}` : 'private, no-cache'
+        )
 
-        logger.info("ETag:", eTag, "If-None-Match:", request.headers['if-none-match'])
+        logger.info(`ETag: ${eTag}, "If-None-Match: ${request.headers['if-none-match']}, Cache-Control: ${reply.getHeader('Cache-Control')}`)
 
         const ifNoneMatch = request.headers['if-none-match']
 
@@ -50,6 +54,8 @@ export default function cacheMiddleware(fastify: FastifyInstance) {
         if (isSendResult) {
             return;
         }
+
+        console.log(`Payload: ${payload}`)
 
         const isSuccessStatus = reply.statusCode === StatusCodes.OK;
 
