@@ -2,8 +2,9 @@ import { InternalErrorException } from "@/exceptions/InternalErrorException";
 import { NotFoundException } from "@/exceptions/NotFoundException";
 import { IReviewRepository } from "@/ports/repositories/IReviewRepository";
 import { Pagination } from "@/types/api/Pagination";
-import { ReviewWithLikes } from "@/types/prisma/ReviewWithLikes";
-import { Prisma, Review } from "@prisma/client";
+import { ReviewWithAuthor } from "@/types/prisma/ReviewWithAuthor";
+import { ReviewWithLikesAndAuthor } from "@/types/prisma/ReviewWithLikes";
+import { Prisma } from "@prisma/client";
 
 export default class ReviewService {
 
@@ -11,12 +12,8 @@ export default class ReviewService {
 
     constructor(private readonly repository: IReviewRepository) {}
 
-    async insert(review: Prisma.ReviewCreateInput): Promise<Review> {
-
-        const reviewCreated = await this.repository.insert(review);
-
-        return reviewCreated;
-
+    async insert(review: Prisma.ReviewCreateInput): Promise<ReviewWithAuthor> {
+        return await this.repository.insert(review);
     }
 
     async findOneByUserIdAndMovieId(userId: string, movieId: string) {
@@ -54,7 +51,7 @@ export default class ReviewService {
         return review;
     }
 
-    async findAllByIdMovie(userId: string, movieId: string, nrPage: number): Promise<[ReviewWithLikes[] | null, Pagination]> {
+    async findAllByIdMovie(userId: string, movieId: string, nrPage: number): Promise<[ReviewWithLikesAndAuthor[] | null, Pagination]> {
 
         const nrAllReviews = await this.repository.findCountByIdMovie(movieId);
 
@@ -85,7 +82,7 @@ export default class ReviewService {
 
     }
 
-    async findAllByIdUser(userId: string, nrPage: number): Promise<[ReviewWithLikes[] | null, Pagination]> {
+    async findAllByIdUser(userId: string, nrPage: number): Promise<[ReviewWithLikesAndAuthor[] | null, Pagination]> {
 
         const nrAllReviews = await this.repository.findCountByIdUser(userId);
 

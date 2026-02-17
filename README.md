@@ -16,7 +16,7 @@ This project has educational objectives only.
 
 | Variável            | Descrição               | Exemplo                              |
 |---------------------|-------------------------|--------------------------------------|
-| `DATABASE_URL`      | Database connection URL | `postgresql://postgres:postgres@localhost:5432/prisma?schema=public` |
+| `DATABASE_URL`      | Database connection URL | `postgresql://postgres:postgres@localhost:5432/film-flow?schema=public` |
 | `TP_PROVIDER`      | Provider                | `TMDB`                               |
 | `ACCESS_TOKEN_TMDB`| Token TMDB              | `Bearer token`                       |
 | `API_URL_TMDB`     | TMDB api url            | `https://api.themoviedb.org/3`       |
@@ -79,3 +79,11 @@ Typical request flow:
 
 - Coming soon
 
+### Prisma
+
+- Migrate database
+    - Command: `npx prisma migrate dev`
+        - Creates a migration
+        - Applies the migration to the database
+        - Creates the tables
+        - Updates the Prisma Client

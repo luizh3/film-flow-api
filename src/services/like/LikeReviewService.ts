@@ -1,12 +1,13 @@
 import { ILikeReviewRepository } from "@/ports/repositories/ILikeReviewRepository";
+import { ReviewWithAuthor } from "@/types/prisma/ReviewWithAuthor";
 import { NotificationService } from "@/services/notification/NotificationService";
 import { NotificationEventType } from "@/types/notifications/NotificationEvent";
 import { NotificationStatusType } from "@/types/notifications/NotificationStatusType";
 import { NotificationsManager } from "@/websockets/manager/NotificationsManager";
-import { Prisma, Review } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export interface LikeReviewOptions {
-    review: Review;
+    review: ReviewWithAuthor;
     notificationService: NotificationService;
     notificationsManager: NotificationsManager;
 }

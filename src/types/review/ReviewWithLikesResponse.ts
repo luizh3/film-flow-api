@@ -1,4 +1,5 @@
 import { Static, Type } from '@sinclair/typebox'
+import { ReviewAuthorResponseSchema } from './ReviewAuthorResponse'
 
 export const ReviewWithLikesResponseSchema = Type.Object({
     title: Type.String(),
@@ -9,7 +10,8 @@ export const ReviewWithLikesResponseSchema = Type.Object({
     programType: Type.String(),
     programTitle: Type.String(),
     likesCount: Type.Number(),
-    likedByMe: Type.Boolean({ default: false })
+    likedByMe: Type.Boolean({ default: false }),
+    author: ReviewAuthorResponseSchema,
 })
 
 export type ReviewWithLikesResponse = Static<typeof ReviewWithLikesResponseSchema>

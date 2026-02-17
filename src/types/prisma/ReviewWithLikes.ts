@@ -1,16 +1,32 @@
-import { Prisma } from "@prisma/client"
+import { Prisma } from "@prisma/client";
 
 export type ReviewWithLikes = Prisma.ReviewGetPayload<{
     include: {
         likeReviews: {
             select: {
-                userId: true
-            }
-        }
+                userId: true;
+            };
+        };
         _count: {
             select: {
-                likeReviews: true
-            }
-        }
-    }
-}>
+                likeReviews: true;
+            };
+        };
+    };
+}>;
+
+export type ReviewWithLikesAndAuthor = Prisma.ReviewGetPayload<{
+    include: {
+        likeReviews: {
+            select: {
+                userId: true;
+            };
+        };
+        _count: {
+            select: {
+                likeReviews: true;
+            };
+        };
+        author: true;
+    };
+}>;

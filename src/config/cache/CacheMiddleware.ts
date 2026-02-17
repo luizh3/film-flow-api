@@ -49,13 +49,19 @@ export default function cacheMiddleware(fastify: FastifyInstance) {
 
     fastify.addHook('onSend', (request: FastifyRequest, reply: FastifyReply, payload: string, done) => {
 
+        const isGet = request.method === 'GET';
+
+        if (!isGet) {
+            logger.info('Not a GET request, skipping cache');
+            done();
+            return;
+        }
+
         const isSendResult: boolean = clientCacheAdjust(request, reply, payload, done);
 
         if (isSendResult) {
             return;
         }
-
-        console.log(`Payload: ${payload}`)
 
         const isSuccessStatus = reply.statusCode === StatusCodes.OK;
 

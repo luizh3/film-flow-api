@@ -1,4 +1,5 @@
 import { Static, Type } from '@sinclair/typebox'
+import { ReviewAuthorResponseSchema } from './ReviewAuthorResponse'
 
 export const ReviewResponseSchema = Type.Object({
     title: Type.String(),
@@ -8,6 +9,7 @@ export const ReviewResponseSchema = Type.Object({
     reviewId: Type.String(),
     programType: Type.String(),
     programTitle: Type.String(),
+    author: ReviewAuthorResponseSchema,
 })
 
 export type ReviewResponse = Static<typeof ReviewResponseSchema>

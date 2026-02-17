@@ -1,9 +1,12 @@
-import { ReviewWithLikes } from "@/types/prisma/ReviewWithLikes";
+import { ReviewWithAuthor } from "@/types/prisma/ReviewWithAuthor";
+import { ReviewWithLikesAndAuthor } from "@/types/prisma/ReviewWithLikes";
 import { CreateReviewRequest } from "@/types/review/CreateReviewRequest";
+import { ReviewAuthorResponse } from "@/types/review/ReviewAuthorResponse";
 import { ReviewResponse } from "@/types/review/ReviewResponse";
 import { ReviewWithLikesResponse } from "@/types/review/ReviewWithLikesResponse";
 import { UpdateReviewRequest } from "@/types/review/UpdateReviewRequest";
-import { Prisma, Review } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { User } from "@prisma/client";
 
 export class ReviewMapper {
 
@@ -32,7 +35,15 @@ export class ReviewMapper {
         }
     }
 
-    static toResponse(review: Review): ReviewResponse {
+    static authorToResponse(author: User): ReviewAuthorResponse {
+        return {
+            id: author.userId,
+            name: author.name,
+            avatarUrl: author.avatarUrl
+        }
+    }
+
+    static toResponse(review: ReviewWithAuthor): ReviewResponse {
         return {
             title: review.title,
             movieId: review.movieId,
@@ -40,11 +51,12 @@ export class ReviewMapper {
             description: review.description,
             reviewId: review.reviewId,
             programTitle: review.programTitle,
-            programType: review.programType
+            programType: review.programType,
+            author: ReviewMapper.authorToResponse(review.author)
         }
     }
 
-    static toResponseWithLikes(review: ReviewWithLikes): ReviewWithLikesResponse {
+    static toResponseWithLikes(review: ReviewWithLikesAndAuthor): ReviewWithLikesResponse {
         return {
             title: review.title,
             movieId: review.movieId,
@@ -54,8 +66,8 @@ export class ReviewMapper {
             programTitle: review.programTitle,
             programType: review.programType,
             likedByMe: review.likeReviews.length > 0,
-            likesCount: review._count.likeReviews
+            likesCount: review._count.likeReviews,
+            author: ReviewMapper.authorToResponse(review.author)
         }
     }
-
 }
