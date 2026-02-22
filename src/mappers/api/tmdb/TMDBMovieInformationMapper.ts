@@ -17,7 +17,7 @@ export class TMDBMovieInformationMapper {
             overview: response.overview,
             posterUrl: response.poster_path ? `${poster.original}${response.poster_path}` : "",
             id: response.id.toString(),
-            release: response.first_air_date,
+            releaseDate: response.release_date || response.first_air_date || "",
             mediaType: response?.media_type?.toUpperCase() ?? defaultShowType
         }
     }

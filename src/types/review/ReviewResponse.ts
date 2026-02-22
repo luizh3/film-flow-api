@@ -9,6 +9,7 @@ export const ReviewResponseSchema = Type.Object({
     reviewId: Type.String(),
     programType: Type.String(),
     programTitle: Type.String(),
+    createdDate: Type.Union([Type.Null(), Type.String()]),
     author: ReviewAuthorResponseSchema,
 })
 

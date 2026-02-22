@@ -24,6 +24,12 @@ export default async function notificationRoutes(
                     [StatusCodes.INTERNAL_SERVER_ERROR]: ErrorResponseSchema
                 },
             },
+            config: {
+                clientCache: {
+                    expiresIn: 0,
+                    privacy: 'private',
+                }
+            }
         },
         notificationController.findAll.bind(notificationController)
     );

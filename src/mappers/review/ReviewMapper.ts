@@ -52,6 +52,7 @@ export class ReviewMapper {
             reviewId: review.reviewId,
             programTitle: review.programTitle,
             programType: review.programType,
+            createdDate: review.createAt?.toISOString() ?? null,
             author: ReviewMapper.authorToResponse(review.author)
         }
     }
@@ -65,6 +66,7 @@ export class ReviewMapper {
             reviewId: review.reviewId,
             programTitle: review.programTitle,
             programType: review.programType,
+            createdDate: review.createAt?.toISOString() ?? null,
             likedByMe: review.likeReviews.length > 0,
             likesCount: review._count.likeReviews,
             author: ReviewMapper.authorToResponse(review.author)

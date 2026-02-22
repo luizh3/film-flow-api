@@ -10,7 +10,7 @@ export const MovieInformationSchema = Type.Object({
     overview: Type.String({ default: "" }),
     genres: Type.Array(GenreSchema, { default: [] }),
     average: Type.Union([Type.Null(), Type.Number()]),
-    release: Type.String({ default: "" }),
+    releaseDate: Type.String({ default: "" }),
     mediaType: Type.String({ default: "" }),
     myReview: Type.Optional(ReviewResponseSchema)
 })

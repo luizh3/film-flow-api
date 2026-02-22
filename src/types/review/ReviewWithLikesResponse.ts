@@ -9,6 +9,7 @@ export const ReviewWithLikesResponseSchema = Type.Object({
     reviewId: Type.String(),
     programType: Type.String(),
     programTitle: Type.String(),
+    createdDate: Type.Union([Type.Null(), Type.String()]),
     likesCount: Type.Number(),
     likedByMe: Type.Boolean({ default: false }),
     author: ReviewAuthorResponseSchema,

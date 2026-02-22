@@ -9,4 +9,5 @@ export interface TMDBMovieInformationResponse {
     vote_average: number | null;
     first_air_date: string;
     media_type: string;
+    release_date: string;
 }
