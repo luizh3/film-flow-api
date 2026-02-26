@@ -87,3 +87,7 @@ Typical request flow:
         - Applies the migration to the database
         - Creates the tables
         - Updates the Prisma Client
+
+### Flow 
+
+![Flow](documentation/flow.png)
