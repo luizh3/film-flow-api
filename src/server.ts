@@ -34,7 +34,7 @@ fastify.register(websocket);
 fastify.register(websocketsRoutes);
 
 const container = createContainer();
-fastify.register(routes, { prefix: "/api", container });
+fastify.register(routes, { prefix: "/api/v1", container });
 
 fastify.setErrorHandler(new ExceptionHandlingController().handle);
 
